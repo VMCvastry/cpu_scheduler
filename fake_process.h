@@ -13,6 +13,7 @@ typedef struct
     ListItem list;
     ResourceType type;
     int duration;
+    int burst_time;
 } ProcessEvent;
 
 // fake process

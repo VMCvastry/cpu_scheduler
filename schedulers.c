@@ -19,6 +19,7 @@ void schedRR(FakeOS *os, void *args_)
     assert(pcb->events.first);
     ProcessEvent *e = (ProcessEvent *)pcb->events.first;
     assert(e->type == CPU);
+    e->burst_time = args->quantum;
 
     // look at the first event
     // if duration>quantum

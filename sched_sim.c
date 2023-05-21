@@ -6,7 +6,7 @@
 #include "sched_sim.h"
 
 FakeOS os;
-Sched sched = SJF;
+Sched sched = DEFAULT;
 
 int main(int argc, char **argv)
 {
