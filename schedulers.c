@@ -2,11 +2,8 @@
 #include "sched_sim.h"
 #include <assert.h>
 #include <stdlib.h>
-#define SCHED DEFAULT
-
-#ifndef SCHED
-#error "SCHED not defined"
-#elif SCHED == DEFAULT
+#include "schedulers.h"
+#include <stdio.h>
 void schedRR(FakeOS *os, void *args_)
 {
     SchedRRArgs *args = (SchedRRArgs *)args_;
@@ -39,4 +36,17 @@ void schedRR(FakeOS *os, void *args_)
 };
 #elif SCHED == SJF
 
-#endif
+void (*getSched(Sched s))(FakeOS *os, void *args_)
+{
+    switch (s)
+    {
+    case DEFAULT:
+        fprintf(stderr, "DEFAULT\n");
+        return schedRR;
+    case SJF:
+        fprintf(stderr, "SJF\n");
+        return schedSJF;
+    default:
+        assert(0);
+    }
+}

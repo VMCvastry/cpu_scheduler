@@ -6,6 +6,7 @@
 #include "sched_sim.h"
 
 FakeOS os;
+Sched sched = SJF;
 
 int main(int argc, char **argv)
 {
@@ -13,7 +14,7 @@ int main(int argc, char **argv)
     SchedRRArgs srr_args;
     srr_args.quantum = 5;
     os.schedule_args = &srr_args;
-    os.schedule_fn = schedRR;
+    os.schedule_fn = getSched(sched);
     for (int i = 1; i < argc; ++i)
     {
         FakeProcess new_process;
