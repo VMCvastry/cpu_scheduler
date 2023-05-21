@@ -13,6 +13,7 @@ typedef struct
     ListItem list;
     ResourceType type;
     int duration;
+    int total_duration;
     int burst_time;
 } ProcessEvent;
 

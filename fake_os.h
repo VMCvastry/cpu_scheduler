@@ -7,6 +7,7 @@ typedef struct
     ListItem list;
     int pid;
     ListHead events;
+    int predicted_burst_duration;
 } FakePCB;
 
 struct FakeOS;
