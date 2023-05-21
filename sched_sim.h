@@ -1,6 +1,6 @@
 #pragma once
 
-typedef struct {
-  int quantum;
+typedef struct
+{
+    int quantum;
 } SchedRRArgs;
-
