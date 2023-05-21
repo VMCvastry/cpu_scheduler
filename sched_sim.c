@@ -13,12 +13,12 @@ int main(int argc, char** argv) {
   srr_args.quantum=5;
   os.schedule_args=&srr_args;
   os.schedule_fn=schedRR;
-  
   for (int i=1; i<argc; ++i){
     FakeProcess new_process;
     int num_events=FakeProcess_load(&new_process, argv[i]);
-    printf("loading [%s], pid: %d, events:%d",
-           argv[i], new_process.pid, num_events);
+    // printf("loading [%s], pid: %d, events:%d",
+    //        argv[i], new_process.pid, num_events);
+           printf("%d, ", new_process.pid);
     if (num_events) {
       FakeProcess* new_process_ptr=(FakeProcess*)malloc(sizeof(FakeProcess));
       *new_process_ptr=new_process;
