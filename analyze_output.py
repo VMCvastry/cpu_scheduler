@@ -28,6 +28,7 @@ def parse(raw):
 def analyze(data, processes):
     total_time = len(data)
     waste_time = 0
+    ready_time = {int(p): 0 for p in processes}
     process_status = {int(p): [] for p in processes}
 
     for i, t in enumerate(data):
@@ -38,14 +39,18 @@ def analyze(data, processes):
             process_status[p][i] = 2
         for p in ready:
             process_status[p][i] = 1
+            ready_time[p] += 1
         if len(running) == 1 and running[0] == -1:
             waste_time += 1
             continue
         for p in running:
             process_status[p][i] = 3
     print("Total time: {}".format(total_time))
-    print("Waste time: {}".format(waste_time))
-    print("Waste percentage: {}".format(waste_time / total_time))
+    print(f"Waste time: {waste_time} ({waste_time / total_time * 100}%)")
+    print(
+        f"Ready time: {sum(ready_time.values())} ({sum(ready_time.values()) / total_time * 100}%), avg: {np.mean(list(ready_time.values()))}"
+    )
+
     # plot
     for p in process_status:
         plt.plot(process_status[p], ".", label=p)
