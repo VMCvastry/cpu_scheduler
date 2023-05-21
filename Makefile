@@ -23,7 +23,10 @@ all:	$(BINS)
 fake_process_test:	fake_process_test.c $(OBJS)
 	$(CC) $(CCOPTS) -o $@ $^
 
-sched_sim:	sched_sim.c $(OBJS)
+schedulers:	schedulers.c $(OBJS)
+	$(CC) $(CCOPTS) -o $@ $^
+
+sched_sim:	sched_sim.c $(OBJS) schedulers.o
 	$(CC) $(CCOPTS) -o $@ $^
 
 clean:
