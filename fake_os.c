@@ -144,7 +144,8 @@ void FakeOS_simStep(FakeOS *os)
     }
     if (!os->running.first)
         printf("\trunning pid: %d\n", -1);
-    for (aux = os->running.first; aux; aux = aux->next)
+    aux = os->running.first;
+    while (aux)
     {
         // decrement the duration of running
         // if event over, destroy event
@@ -167,7 +168,9 @@ void FakeOS_simStep(FakeOS *os)
             if (!running->events.first)
             {
                 printf("\t\tend process\n");
+                aux = aux->next;
                 free(running); // kill process
+                continue;
             }
             else
             {
@@ -192,6 +195,7 @@ void FakeOS_simStep(FakeOS *os)
             List_detach(&os->running, (ListItem *)running);
             List_pushBack(&os->ready, (ListItem *)running);
         }
+        aux = aux->next;
     }
     if (os->schedule_fn && !os->running.first)
     {
