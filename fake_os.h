@@ -11,7 +11,7 @@ typedef struct
 } FakePCB;
 
 struct FakeOS;
-typedef void (*ScheduleFn)(struct FakeOS *os, void *args);
+typedef FakePCB *(*ScheduleFn)(struct FakeOS *os, void *args);
 
 typedef struct FakeOS
 {

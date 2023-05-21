@@ -7,4 +7,4 @@ typedef enum
     SJF_PRED = 2,
 } Sched;
 
-void (*getSched(Sched s))(FakeOS *os, void *args_);
+FakePCB *(*getSched(Sched s))(FakeOS *os, void *args_);

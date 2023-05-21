@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
     FakeOS_init(&os);
     SchedRRArgs srr_args;
-    srr_args.quantum = 5;
+    srr_args.quantum = 500;
     os.schedule_args = &srr_args;
     os.schedule_fn = getSched(sched);
     for (int i = 1; i < argc; ++i)
