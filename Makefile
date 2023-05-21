@@ -1,5 +1,5 @@
 CC=gcc
-CCOPTS=--std=gnu99 -Wall -D_LIST_DEBUG_ -g
+CCOPTS=--std=gnu99 -Wall -D_LIST_DEBUG_ -g -fsanitize=address -fsanitize=undefined -fno-sanitize-recover 
 AR=ar
 
 OBJS=linked_list.o\
