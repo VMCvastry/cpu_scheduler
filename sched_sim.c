@@ -30,7 +30,7 @@ int main(int argc, char **argv)
         }
     }
     printf("num processes in queue %d\n", os.processes.size);
-    while (os.running || os.ready.first || os.waiting.first || os.processes.first)
+    while (os.running.first || os.ready.first || os.waiting.first || os.processes.first)
     {
         FakeOS_simStep(&os);
     }

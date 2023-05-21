@@ -6,7 +6,7 @@
 
 void FakeOS_init(FakeOS *os)
 {
-    os->running = 0;
+    List_init(&os->running);
     List_init(&os->ready);
     List_init(&os->waiting);
     List_init(&os->processes);
@@ -20,9 +20,14 @@ void FakeOS_createProcess(FakeOS *os, FakeProcess *p)
     assert(p->arrival_time == os->timer && "time mismatch in creation");
     // we check that in the list of PCBs there is no
     // pcb having the same pid
-    assert((!os->running || os->running->pid != p->pid) && "pid taken");
-
-    ListItem *aux = os->ready.first;
+    ListItem *aux = os->running.first;
+    while (aux)
+    {
+        FakePCB *pcb = (FakePCB *)aux;
+        assert(pcb->pid != p->pid && "pid taken");
+        aux = aux->next;
+    }
+    aux = os->ready.first;
     while (aux)
     {
         FakePCB *pcb = (FakePCB *)aux;
@@ -68,7 +73,6 @@ void FakeOS_simStep(FakeOS *os)
 {
 
     printf("************** TIME: %08d **************\n", os->timer);
-
     // scan process waiting to be started
     // and create all processes starting now
     ListItem *aux = os->processes.first;
@@ -138,15 +142,17 @@ void FakeOS_simStep(FakeOS *os)
             }
         }
     }
-
-    // decrement the duration of running
-    // if event over, destroy event
-    // and reschedule process
-    // if last event, destroy running
-    FakePCB *running = os->running;
-    printf("\trunning pid: %d\n", running ? running->pid : -1);
-    if (running)
+    if (!os->running.first)
+        printf("\trunning pid: %d\n", -1);
+    for (aux = os->running.first; aux; aux = aux->next)
     {
+        // decrement the duration of running
+        // if event over, destroy event
+        // and reschedule process
+        // if last event, destroy running
+        FakePCB *running = (FakePCB *)aux;
+        printf("\trunning pid: %d\n", running->pid);
+
         ProcessEvent *e = (ProcessEvent *)running->events.first;
         assert(e->type == CPU);
         e->duration--;
@@ -155,6 +161,7 @@ void FakeOS_simStep(FakeOS *os)
         if (e->duration == 0)
         {
             printf("\t\tend burst\n");
+            List_detach(&os->running, (ListItem *)running);
             List_popFront(&running->events);
             free(e);
             if (!running->events.first)
@@ -177,23 +184,20 @@ void FakeOS_simStep(FakeOS *os)
                     break;
                 }
             }
-            os->running = 0;
         }
         else if (e->burst_time == 0)
         {
             printf("\t\tquantum ended move to ready\n");
             e->burst_time = -1;
+            List_detach(&os->running, (ListItem *)running);
             List_pushBack(&os->ready, (ListItem *)running);
-            os->running = 0;
         }
     }
-
-    // call schedule, if defined
-    if (os->schedule_fn && !os->running)
+    if (os->schedule_fn && !os->running.first)
     {
         FakePCB *next_pcb = (*os->schedule_fn)(os, os->schedule_args);
         if (next_pcb)
-            os->running = next_pcb;
+            List_pushBack(&os->running, (ListItem *)next_pcb);
     }
 
     ++os->timer;
