@@ -2,7 +2,11 @@
 #include "sched_sim.h"
 #include <assert.h>
 #include <stdlib.h>
+#define SCHED DEFAULT
 
+#ifndef SCHED
+#error "SCHED not defined"
+#elif SCHED == DEFAULT
 void schedRR(FakeOS *os, void *args_)
 {
     SchedRRArgs *args = (SchedRRArgs *)args_;
@@ -33,3 +37,6 @@ void schedRR(FakeOS *os, void *args_)
         List_pushFront(&pcb->events, (ListItem *)qe);
     }
 };
+#elif SCHED == SJF
+
+#endif
