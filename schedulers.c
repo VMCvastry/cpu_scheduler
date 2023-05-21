@@ -50,19 +50,7 @@ void schedSJF(FakeOS *os, void *args_)
     ProcessEvent *e = (ProcessEvent *)best_pcb->events.first;
     assert(e->type == CPU);
 
-    // look at the first event
-    // if duration>quantum
-    // push front in the list of event a CPU event of duration quantum
-    // alter the duration of the old event subtracting quantum
-    if (e->duration > args->quantum)
-    {
-        ProcessEvent *qe = (ProcessEvent *)malloc(sizeof(ProcessEvent));
-        qe->list.prev = qe->list.next = 0;
-        qe->type = CPU;
-        qe->duration = args->quantum;
-        e->duration -= args->quantum;
-        List_pushFront(&best_pcb->events, (ListItem *)qe);
-    }
+    e->burst_time = args->quantum;
 };
 
 void (*getSched(Sched s))(FakeOS *os, void *args_)
