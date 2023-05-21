@@ -150,7 +150,7 @@ void FakeOS_simStep(FakeOS *os)
         assert(e->type == CPU);
         e->duration--;
         e->burst_time--;
-        printf("\t\tremaining time:%d\n", e->duration);
+        printf("\t\tremaining time:%d, before preemption: %d\n", e->duration, e->burst_time);
         if (e->duration == 0)
         {
             printf("\t\tend burst\n");
@@ -178,13 +178,13 @@ void FakeOS_simStep(FakeOS *os)
             }
             os->running = 0;
         }
-        // else if (e->burst_time == 0)
-        // {
-        //     printf("\t\tquantum ended move to ready\n");
-        //     e->burst_time = -1;
-        //     List_pushBack(&os->ready, (ListItem *)running);
-        //     os->running = 0;
-        // }
+        else if (e->burst_time == 0)
+        {
+            printf("\t\tquantum ended move to ready\n");
+            e->burst_time = -1;
+            List_pushBack(&os->ready, (ListItem *)running);
+            os->running = 0;
+        }
     }
 
     // call schedule, if defined
