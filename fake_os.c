@@ -197,11 +197,12 @@ void FakeOS_simStep(FakeOS *os)
         }
         aux = aux->next;
     }
-    if (os->schedule_fn && !os->running.first)
+    while (os->schedule_fn && os->running.size < os->n_cores)
     {
         FakePCB *next_pcb = (*os->schedule_fn)(os, os->schedule_args);
-        if (next_pcb)
-            List_pushBack(&os->running, (ListItem *)next_pcb);
+        if (!next_pcb)
+            break;
+        List_pushBack(&os->running, (ListItem *)next_pcb);
     }
 
     ++os->timer;

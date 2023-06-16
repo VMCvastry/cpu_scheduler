@@ -7,14 +7,16 @@
 
 FakeOS os;
 Sched sched = DEFAULT;
+int n_cores = 10;
 
 int main(int argc, char **argv)
 {
     FakeOS_init(&os);
     SchedRRArgs srr_args;
-    srr_args.quantum = 500;
+    srr_args.quantum = 50;
     os.schedule_args = &srr_args;
     os.schedule_fn = getSched(sched);
+    os.n_cores = n_cores;
     for (int i = 1; i < argc; ++i)
     {
         FakeProcess new_process;

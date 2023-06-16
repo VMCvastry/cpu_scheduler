@@ -23,6 +23,7 @@ typedef struct FakeOS
     void *schedule_args;
 
     ListHead processes;
+    int n_cores;
 } FakeOS;
 
 void FakeOS_init(FakeOS *os);
