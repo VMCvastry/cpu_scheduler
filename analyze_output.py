@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from enum import Enum
 
 
 def parse(raw):
@@ -25,35 +26,66 @@ def parse(raw):
     return res
 
 
+class Status(Enum):
+    OFF = 0
+    WAITING = 2
+    READY = 1
+    RUNNING = 3
+
+
+def get_segments(x, p, status, pid):
+    xx = np.array(x)
+    y = np.array([s.value for s in p])
+    mask = y == status.value
+    x_segment = xx[mask]
+    y_segment = [pid for _ in x_segment]
+    return x_segment, y_segment
+
+
 def analyze(data, processes):
     total_time = len(data)
     waste_time = 0
     ready_time = {int(p): 0 for p in processes}
+    life_time = {int(p): 0 for p in processes}
     process_status = {int(p): [] for p in processes}
 
     for i, t in enumerate(data):
         waiting, running, ready = t
         for p in process_status:
-            process_status[p].append(0)
+            process_status[p].append(Status.OFF)
         for p in waiting:
-            process_status[p][i] = 2
+            process_status[p][i] = Status.WAITING
+            life_time[p] += 1
         for p in ready:
-            process_status[p][i] = 1
+            process_status[p][i] = Status.READY
             ready_time[p] += 1
+            life_time[p] += 1
         if len(running) == 1 and running[0] == -1:
             waste_time += 1
             continue
         for p in running:
-            process_status[p][i] = 3
+            process_status[p][i] = Status.RUNNING
+            life_time[p] += 1
     print("Total time: {}".format(total_time))
-    print(f"Waste time: {waste_time} ({waste_time / total_time * 100}%)")
     print(
-        f"Ready time: {sum(ready_time.values())} ({sum(ready_time.values()) / total_time * 100}%), avg: {np.mean(list(ready_time.values()))}"
+        f"CPU utilization: {total_time-waste_time} ({round((1-waste_time / total_time) * 100)}%)"
     )
-
+    print(
+        f"Tournaround time: {sum(life_time.values())} (avg: {np.mean(list(life_time.values()))})"
+    )
+    print(
+        f"Waiting time: {sum(ready_time.values())} ({round(sum(ready_time.values()) / total_time * 100)}%), avg: {np.mean(list(ready_time.values()))}"
+    )
+    x = list(range(total_time))
     # plot
     for p in process_status:
-        plt.plot(process_status[p], ".", label=p)
+        x_segment, y_segment = get_segments(x, process_status[p], Status.READY, p)
+        plt.plot(x_segment, y_segment, ".", label=p, color="red")
+        x_segment, y_segment = get_segments(x, process_status[p], Status.WAITING, p)
+        plt.plot(x_segment, y_segment, ".", label=p, color="gray")
+        x_segment, y_segment = get_segments(x, process_status[p], Status.RUNNING, p)
+        plt.plot(x_segment, y_segment, ".", label=p, color="green")
+
     plt.legend()
     plt.show()
 
