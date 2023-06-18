@@ -80,11 +80,11 @@ def analyze(data, processes):
     # plot
     for p in process_status:
         x_segment, y_segment = get_segments(x, process_status[p], Status.READY, p)
-        plt.plot(x_segment, y_segment, ".", label=p, color="red")
+        plt.plot(x_segment, y_segment, ".", color="red")
         x_segment, y_segment = get_segments(x, process_status[p], Status.WAITING, p)
-        plt.plot(x_segment, y_segment, ".", label=p, color="gray")
+        plt.plot(x_segment, y_segment, ".", color="gray")
         x_segment, y_segment = get_segments(x, process_status[p], Status.RUNNING, p)
-        plt.plot(x_segment, y_segment, ".", label=p, color="green")
+        plt.plot(x_segment, y_segment, ".", color="green")
 
     plt.legend()
     plt.show()

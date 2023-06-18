@@ -37,8 +37,6 @@ FakePCB *schedSJF(FakeOS *os, void *args_)
         ProcessEvent *e = (ProcessEvent *)pcb->events.first;
         if (e->duration < best_e->duration)
         {
-            fprintf(stderr, "swi\n");
-
             best_pcb = pcb;
             best_e = (ProcessEvent *)best_pcb->events.first;
         }
@@ -64,7 +62,6 @@ FakePCB *schedSJF_PRED(FakeOS *os, void *args_)
         FakePCB *pcb = (FakePCB *)aux;
         if (pcb->predicted_burst_duration < best_pcb->predicted_burst_duration)
         {
-            fprintf(stderr, "swi\n");
             best_pcb = pcb;
         }
     }
