@@ -2,5 +2,5 @@
 !*.*
 *.o
 !Makefile
-!example/
+!example*/
 .vscode/
