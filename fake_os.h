@@ -7,7 +7,7 @@ typedef struct
     ListItem list;
     int pid;
     ListHead events;
-    int predicted_burst_duration;
+    int predicted_burst_duration; // used for prediction in SJF
 } FakePCB;
 
 struct FakeOS;
@@ -23,9 +23,8 @@ typedef struct FakeOS
     void *schedule_args;
 
     ListHead processes;
-    int n_cores;
+    int n_cores; // number of cores
 } FakeOS;
 
 void FakeOS_init(FakeOS *os);
 void FakeOS_simStep(FakeOS *os);
-void FakeOS_destroy(FakeOS *os);

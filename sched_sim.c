@@ -8,12 +8,13 @@
 FakeOS os;
 Sched sched;
 int n_cores;
+int quantum = 5;
 
 int main(int argc, char **argv)
 {
     FakeOS_init(&os);
     SchedRRArgs srr_args;
-    srr_args.quantum = 50;
+    srr_args.quantum = quantum;
     os.schedule_args = &srr_args;
     if (argc < 4)
     {

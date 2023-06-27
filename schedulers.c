@@ -7,9 +7,6 @@
 FakePCB *schedRR(FakeOS *os, void *args_)
 {
     SchedRRArgs *args = (SchedRRArgs *)args_;
-
-    // look for the first process in ready
-    // if none, return
     if (!os->ready.first)
         return NULL;
 
@@ -21,11 +18,10 @@ FakePCB *schedRR(FakeOS *os, void *args_)
     e->burst_time = args->quantum;
     return pcb;
 };
+
 FakePCB *schedSJF(FakeOS *os, void *args_)
 {
     SchedRRArgs *args = (SchedRRArgs *)args_;
-    // look for the first process in ready
-    // if none, return
     if (!os->ready.first)
         return NULL;
 
@@ -45,7 +41,6 @@ FakePCB *schedSJF(FakeOS *os, void *args_)
     assert(best_pcb->events.first);
     ProcessEvent *e = (ProcessEvent *)best_pcb->events.first;
     assert(e->type == CPU);
-
     e->burst_time = args->quantum;
     return best_pcb;
 };

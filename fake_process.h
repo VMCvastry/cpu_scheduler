@@ -12,7 +12,7 @@ typedef struct
 {
     ListItem list;
     ResourceType type;
-    int duration; // current event duration
+    int duration; // current event remaining duration
     int total_duration;
     int burst_time; // Time before preemption
 } ProcessEvent;

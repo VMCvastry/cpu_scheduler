@@ -149,9 +149,8 @@ void FakeOS_simStep(FakeOS *os)
     while (aux)
     {
         // decrement the duration of running
-        // if event over, destroy event
-        // and reschedule process
-        // if last event, destroy running
+        // if event over, destroy event or schedule next event
+        // if quantum over, preempt
         FakePCB *running = (FakePCB *)aux;
         printf("\trunning pid: %d\n", running->pid);
 
@@ -207,8 +206,4 @@ void FakeOS_simStep(FakeOS *os)
     }
 
     ++os->timer;
-}
-
-void FakeOS_destroy(FakeOS *os)
-{
 }
