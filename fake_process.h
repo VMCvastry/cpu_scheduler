@@ -12,9 +12,9 @@ typedef struct
 {
     ListItem list;
     ResourceType type;
-    int duration;
+    int duration; // current event duration
     int total_duration;
-    int burst_time;
+    int burst_time; // Time before preemption
 } ProcessEvent;
 
 // fake process

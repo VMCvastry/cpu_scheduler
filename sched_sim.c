@@ -6,8 +6,8 @@
 #include "sched_sim.h"
 
 FakeOS os;
-Sched sched = DEFAULT;
-int n_cores = 10;
+Sched sched;
+int n_cores;
 
 int main(int argc, char **argv)
 {
@@ -15,9 +15,33 @@ int main(int argc, char **argv)
     SchedRRArgs srr_args;
     srr_args.quantum = 50;
     os.schedule_args = &srr_args;
+    if (argc < 4)
+    {
+        printf("Usage: %s scheduler<RR, SJF, PRED_SJF> n_cores files...\n", argv[0]);
+        exit(1);
+    }
+    if (argv[1][0] == 'R')
+    {
+        sched = DEFAULT;
+    }
+    else if (argv[1][0] == 'S')
+    {
+        sched = SJF;
+    }
+    else if (argv[1][0] == 'P')
+    {
+        sched = SJF_PRED;
+    }
+    else
+    {
+        printf("Usage: %s scheduler<RR, SJF, PRED_SJF> n_cores files...\n", argv[0]);
+        exit(1);
+    }
+
+    n_cores = atoi(argv[2]);
     os.schedule_fn = getSched(sched);
     os.n_cores = n_cores;
-    for (int i = 1; i < argc; ++i)
+    for (int i = 3; i < argc; ++i)
     {
         FakeProcess new_process;
         int num_events = FakeProcess_load(&new_process, argv[i]);

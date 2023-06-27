@@ -71,6 +71,7 @@ void FakeOS_createProcess(FakeOS *os, FakeProcess *p)
 
 void FakeOS_simStep(FakeOS *os)
 {
+    assert(os->schedule_fn && "no scheduler");
 
     printf("************** TIME: %08d **************\n", os->timer);
     // scan process waiting to be started
@@ -197,7 +198,7 @@ void FakeOS_simStep(FakeOS *os)
         }
         aux = aux->next;
     }
-    while (os->schedule_fn && os->running.size < os->n_cores)
+    while (os->running.size < os->n_cores)
     {
         FakePCB *next_pcb = (*os->schedule_fn)(os, os->schedule_args);
         if (!next_pcb)
